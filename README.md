@@ -13,7 +13,6 @@
 Клонируйте репозиторий и перейдите в его папку:
 
 ```bash
-Копировать
 git clone https://github.com/kgns/stockmate-front.git
 cd stockmate-front
 ```
@@ -21,7 +20,6 @@ cd stockmate-front
 Установите зависимости:
 
 ```bash
-Копировать
 pnpm install
 ```
 
