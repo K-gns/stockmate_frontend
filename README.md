@@ -1,4 +1,5 @@
 # проект StockMate (Складской помощник) 
+Проект команды из группы РИМ-140950
 
 ## Требования
 
@@ -7,14 +8,13 @@
   Установите pnpm глобально, если он не установлен:
   ```bash
   npm install -g pnpm
-## Getting Started
 
 ## Установка
 Клонируйте репозиторий и перейдите в его папку:
 
 ```bash
-git clone https://github.com/kgns/stockmate-front.git
-cd stockmate-front
+git clone https://github.com/K-gns/stockmate_frontend.git
+cd stockmate_frontend
 ```
 
 Установите зависимости:
