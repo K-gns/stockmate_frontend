@@ -8,34 +8,28 @@ export type PrimaryColorConfig = {
 // Primary color config object
 const primaryColorConfig: PrimaryColorConfig[] = [
   {
-    name: 'primary-1',
-    light: '#A379FF',
-    main: '#8C57FF',
-    dark: '#7E4EE6'
+    name: 'primary-black',
+    light: '#333333',   // Темно-серый
+    main: '#000000',     // Черный
+    dark: '#000000'      // Черный
   },
   {
-    name: 'primary-2',
-    light: '#ba68c8',
-    main: '#9c27b0',
-    dark: '#7b1fa2'
+    name: 'primary-gray',
+    light: '#999999',    // Средний серый
+    main: '#666666',     // Основной серый
+    dark: '#4D4D4D'      // Темный серый
   },
   {
-    name: 'primary-3',
-    light: '#ef5350',
-    main: '#d32f2f',
-    dark: '#c62828'
+    name: 'primary-white',
+    light: '#F5F5F5',    // Светло-серый
+    main: '#FFFFFF',      // Белый
+    dark: '#E0E0E0'       // Средний светлый
   },
   {
-    name: 'primary-4',
-    light: '#ff9800',
-    main: '#ed6c02',
-    dark: '#e65100'
-  },
-  {
-    name: 'primary-5',
-    light: '#4caf50',
-    main: '#2e7d32',
-    dark: '#1b5e20'
+    name: 'primary-contrast',
+    light: '#E0E0E0',     // Светлый контраст
+    main: '#333333',      // Темный контраст
+    dark: '#1A1A1A'       // Очень темный
   }
 ]
 

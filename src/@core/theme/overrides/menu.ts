@@ -29,6 +29,8 @@ const menu = (skin: Skin): Theme['components'] => ({
       root: ({ theme }) => ({
         paddingBlock: theme.spacing(2),
         color: 'var(--mui-palette-text-primary)',
+        backgroundImage: 'none',
+        background: 'none',
         '&.Mui-selected': {
           backgroundColor: 'var(--mui-palette-primary-lightOpacity)',
           color: 'var(--mui-palette-primary-main)',

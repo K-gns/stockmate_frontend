@@ -26,7 +26,7 @@ const useRequestsStore = create<RequestsState & RequestsActions>((set) => ({
     { id: 2, material: 'Пакет п/э 200×300', date: '10.04.25', count: 30, unit: 'шт', bank: 'Отделение2', status: 'in_progress' },
     { id: 3, material: 'Офисные стулья для айти-отдела главного офиса', date: '10.04.25', count: 45, unit: 'шт', bank: 'Отделение1', status: 'in_progress' },
   ],
-  completedRequests: Array.from({ length: 15 }, (_, i) => ({
+  completedRequests: Array.from({ length: 18 }, (_, i) => ({
     id: 4 + i,
     material: i % 2 === 0 ? 'Пакет п/э 200×300' : 'Офисные стулья',
     date: `${7 + i}.04.25`,

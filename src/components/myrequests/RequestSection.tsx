@@ -108,7 +108,7 @@ const RequestSection = ({ title, requests, statusColor, total } : RequestSection
                     display: 'flex',
                     alignItems: 'center',
                     gap: 1,
-                    backgroundColor: 'background.paper',
+                    backgroundColor: 'transparent',
                     px: 1,
                     borderRadius: 1,
                   }}

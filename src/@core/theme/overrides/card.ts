@@ -13,10 +13,21 @@ const card = (skin: Skin): Theme['components'] => {
         })
       },
       styleOverrides: {
-        root: ({ ownerState }) => ({
-          ...(ownerState.variant !== 'outlined' && {
-            boxShadow: 'var(--mui-customShadows-md)'
-          })
+        root: ({ theme }) => ({
+          // Базовые стили для всех карточек
+          backgroundColor: 'transparent', // Прозрачный фон
+          boxShadow: 'none', // Убираем тень
+          border: '1px solid', // Добавляем обводку
+          borderColor: theme.palette.mode === 'light'
+            ? 'rgba(0, 0, 0, 0.12)'
+            : 'rgba(255, 255, 255, 0.12)', // Цвет обводки из темы
+          transition: 'none', // Отключаем анимацию
+
+          // Стили для ховера
+          '&:hover': {
+            borderColor: theme.palette.primary.light,
+            boxShadow: 'none'
+          }
         })
       }
     },
