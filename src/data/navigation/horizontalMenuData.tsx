@@ -7,6 +7,16 @@ const horizontalMenuData = (): HorizontalMenuDataType[] => [
     href: '/my-requests',
     icon: 'ri-survey-line'
   },
+  {
+    label: 'Мои ответы',
+    href: '/my-responses',
+    icon: 'ri-survey-line'
+  },
+  {
+    label: 'Запасы',
+    href: '/provisions',
+    icon: 'ri-survey-line'
+  },
   // {
   //   label: 'About',
   //   href: '/about',
