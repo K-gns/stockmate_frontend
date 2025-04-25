@@ -1,5 +1,7 @@
 import { create } from 'zustand'
 
+import { generateMockRequests, inProgressRequests } from '@/utils/mockRequests'
+
 export interface RequestType {
   id: number;
   material: string;
@@ -8,33 +10,25 @@ export interface RequestType {
   unit: string;
   bank: string;
   comment?: string;
-  status: 'in_progress' | 'completed';
+  status: 'На уточнении' | 'В работе' | 'Завершена' | 'Отменена';
+  statusColor: 'pending' | 'inactive' | 'active' | 'cancelled' | 'completed';
 }
 
 type RequestsState = {
   inProgressRequests: RequestType[];
   completedRequests: RequestType[];
+  cancelledRequests: RequestType[];
 };
 
 type RequestsActions = {
-  addRequest: (newRequest: Omit<RequestType, 'id' | 'date' | 'status'>) => void;
+  addRequest: (newRequest: Omit<RequestType, 'id' | 'date' | 'status' | 'statusColor'>) => void;
+  cancelRequest: (id: number) => void;
 };
 
 const useRequestsStore = create<RequestsState & RequestsActions>((set) => ({
-  inProgressRequests: [
-    { id: 1, material: 'Пакет п/э 200×300', date: '10.04.25', count: 20, unit: 'шт', bank: 'Отделение1', status: 'in_progress' },
-    { id: 2, material: 'Пакет п/э 200×300', date: '10.04.25', count: 30, unit: 'шт', bank: 'Отделение2', status: 'in_progress' },
-    { id: 3, material: 'Офисные стулья для айти-отдела главного офиса', date: '10.04.25', count: 45, unit: 'шт', bank: 'Отделение1', status: 'in_progress' },
-  ],
-  completedRequests: Array.from({ length: 18 }, (_, i) => ({
-    id: 4 + i,
-    material: i % 2 === 0 ? 'Пакет п/э 200×300' : 'Офисные стулья',
-    date: `${7 + i}.04.25`,
-    count: 15 + i * 3,
-    unit: 'шт',
-    bank: `Отделение${(i % 3) + 1}`,
-    status: 'completed',
-  })),
+  inProgressRequests: inProgressRequests,
+  completedRequests: generateMockRequests(18),
+  cancelledRequests: [],
 
   addRequest: (newRequest) =>
     set((state) => ({
@@ -43,11 +37,30 @@ const useRequestsStore = create<RequestsState & RequestsActions>((set) => ({
           id: Date.now(),
           ...newRequest,
           date: new Date().toLocaleDateString('ru-RU'),
-          status: 'in_progress',
+          status: 'На уточнении',
+          statusColor: 'pending',
         },
         ...state.inProgressRequests,
       ],
-  }))
+    })),
+  cancelRequest: (id) =>
+    set((state) => {
+      const target = state.inProgressRequests.find(r => r.id === id);
+
+      if (!target) return state;
+
+      return {
+        inProgressRequests: state.inProgressRequests.filter(r => r.id !== id),
+        cancelledRequests: [
+          {
+            ...target,
+            status: 'Отменена',
+            statusColor: 'cancelled',
+          },
+          ...state.cancelledRequests,
+        ],
+      };
+    }),
 }))
 
 export default useRequestsStore

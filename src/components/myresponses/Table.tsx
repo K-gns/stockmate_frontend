@@ -34,11 +34,22 @@ const rowsData: TableBodyRowType[] = [
     department: 'Сбер девайсы',
     description: 'Стулья для IT отдела',
     quantity: 5,
-    status: 'Активна',
+    status: 'В работе',
     statusColor: 'active'
   },
   {
-    avatarSrc: '/images/avatars/2.png',
+    avatarSrc: '/images/avatars/6.png',
+    name: 'Алексей Соколов',
+    username: '@alexey_sokolov',
+    email: 'alexeySokolov@yandex.ru',
+    department: 'Сбер финансы',
+    description: 'Калькуляторы для бухгалтерии',
+    quantity: 15,
+    status: 'В работе',
+    statusColor: 'active'
+  },
+  {
+    avatarSrc: '/images/avatars/3.png',
     name: 'Сергей Петров',
     username: '@sergey_petrov',
     email: 'sergeyPetrov@yandex.ru',
@@ -49,18 +60,7 @@ const rowsData: TableBodyRowType[] = [
     statusColor: 'pending'
   },
   {
-    avatarSrc: '/images/avatars/3.png',
-    name: 'Анна Смирнова',
-    username: '@anna_smirnova',
-    email: 'annaSmirnova@yandex.ru',
-    department: 'Сбер аналитика',
-    description: 'Ноутбуки для аналитиков',
-    quantity: 10,
-    status: 'Завершена',
-    statusColor: 'inactive'
-  },
-  {
-    avatarSrc: '/images/avatars/4.png',
+    avatarSrc: '/images/avatars/5.png',
     name: 'Дмитрий Иванов',
     username: '@dmitry_ivanov',
     email: 'dmitryIvanov@yandex.ru',
@@ -71,7 +71,18 @@ const rowsData: TableBodyRowType[] = [
     statusColor: 'pending'
   },
   {
-    avatarSrc: '/images/avatars/5.png',
+    avatarSrc: '/images/avatars/8.png',
+    name: 'Мария Попова',
+    username: '@maria_popova',
+    email: 'mariaPopova@yandex.ru',
+    department: 'Сбер HR',
+    description: 'Канцелярия для отдела кадров',
+    quantity: 20,
+    status: 'На уточнении',
+    statusColor: 'pending'
+  },
+  {
+    avatarSrc: '/images/avatars/4.png',
     name: 'Ольга Кузнецова',
     username: '@olga_kuznetsova',
     email: 'olgaKuznetsova@yandex.ru',
@@ -82,27 +93,16 @@ const rowsData: TableBodyRowType[] = [
     statusColor: 'inactive'
   },
   {
-    avatarSrc: '/images/avatars/6.png',
-    name: 'Алексей Соколов',
-    username: '@alexey_sokolov',
-    email: 'alexeySokolov@yandex.ru',
-    department: 'Сбер финансы',
-    description: 'Калькуляторы для бухгалтерии',
-    quantity: 15,
-    status: 'Активна',
-    statusColor: 'active'
+    avatarSrc: '/images/avatars/2.png',
+    name: 'Анна Смирнова',
+    username: '@anna_smirnova',
+    email: 'annaSmirnova@yandex.ru',
+    department: 'Сбер аналитика',
+    description: 'Ноутбуки для аналитиков',
+    quantity: 10,
+    status: 'Завершена',
+    statusColor: 'inactive'
   },
-  {
-    avatarSrc: '/images/avatars/7.png',
-    name: 'Мария Попова',
-    username: '@maria_popova',
-    email: 'mariaPopova@yandex.ru',
-    department: 'Сбер HR',
-    description: 'Канцелярия для отдела кадров',
-    quantity: 20,
-    status: 'На уточнении',
-    statusColor: 'pending'
-  }
 ]
 
 const Table = () => {
