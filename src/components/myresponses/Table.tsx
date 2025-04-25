@@ -2,9 +2,10 @@
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import Chip from '@mui/material/Chip'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 
 // Third-party Imports
-import classnames from 'classnames'
+
 
 // Components Imports
 import CustomAvatar from '@core/components/mui/Avatar'
@@ -118,6 +119,7 @@ const Table = () => {
             <th>Описание заявки</th>
             <th>Количество, шт</th>
             <th>Статус заявки</th>
+            <th>Анализ</th>
           </tr>
           </thead>
           <tbody>
@@ -125,7 +127,7 @@ const Table = () => {
             <tr key={index}>
               <td className='!plb-1'>
                 <div className='flex items-center gap-3'>
-                  <CustomAvatar src={row.avatarSrc} size={34}/>
+                  <CustomAvatar src={row.avatarSrc} size={34} />
                   <div className='flex flex-col'>
                     <Typography color='text.primary' className='font-medium'>
                       {row.name}
@@ -158,6 +160,15 @@ const Table = () => {
                   label={row.status}
                   size='small'
                 />
+              </td>
+              <td className='!pb-1'>
+                <a
+                  href={`/analysis/${index}`} // или другой путь, если есть ID
+                  className='flex items-center gap-1 text-primary underline hover:no-underline'
+                >
+                  <span>Перейти</span>
+                  <ChevronRightIcon fontSize="small" />
+                </a>
               </td>
             </tr>
           ))}

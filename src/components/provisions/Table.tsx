@@ -22,61 +22,61 @@ type TableBodyRowType = {
 // Vars
 const rowsData: TableBodyRowType[] = [
   {
-    warehouse: 'Склад 1 (Москва)',
-    goods: 'Кофемашина',
-    remains: 'Много',
-    remainsColor: 'active',
-    forecast: 'Пополнение не требуется'
-  },
-  {
-    warehouse: 'Склад 5 (Новосибирск)',
-    goods: 'Стулья для офиса',
-    remains: 'Средне',
-    remainsColor: 'pending',
-    forecast: 'Необходимо пополнение в течение 2 недель'
-  },
-  {
     warehouse: 'Склад 3 (Владивосток)',
-    goods: 'Принтеры',
+    goods: 'Канцелярия, ручки',
     remains: 'Мало',
     remainsColor: 'inactive',
     forecast: 'Необходимо пополнение срочно!'
   },
   {
-    warehouse: 'Склад 2 (Санкт-Петербург)',
-    goods: 'Ноутбуки',
-    remains: 'Много',
-    remainsColor: 'active',
-    forecast: 'Пополнение не требуется'
+    warehouse: 'Склад 6 (Казань)',
+    goods: 'Пакеты п/э',
+    remains: 'Мало',
+    remainsColor: 'inactive',
+    forecast: 'Необходимо пополнение срочно!'
   },
   {
     warehouse: 'Склад 4 (Екатеринбург)',
-    goods: 'Кресла офисные',
+    goods: 'Бумага А4',
     remains: 'Средне',
     remainsColor: 'pending',
     forecast: 'Необходимо пополнение в течение 1 месяца'
   },
   {
-    warehouse: 'Склад 6 (Казань)',
-    goods: 'Проекторы',
-    remains: 'Мало',
-    remainsColor: 'inactive',
-    forecast: 'Необходимо пополнение срочно!'
+    warehouse: 'Склад 5 (Новосибирск)',
+    goods: 'Картриджи для ч/б принтера',
+    remains: 'Средне',
+    remainsColor: 'pending',
+    forecast: 'Необходимо пополнение в течение 2 недель'
   },
   {
-    warehouse: 'Склад 7 (Красноярск)',
-    goods: 'Канцелярия',
+    warehouse: 'Склад 8 (Ростов-на-Дону)',
+    goods: 'Картриджи для ч/б принтера',
+    remains: 'Средне',
+    remainsColor: 'pending',
+    forecast: 'Необходимо пополнение в течение 3 недель'
+  },
+  {
+    warehouse: 'Склад 1 (Москва)',
+    goods: 'Скоросшиватели',
     remains: 'Много',
     remainsColor: 'active',
     forecast: 'Пополнение не требуется'
   },
   {
-    warehouse: 'Склад 8 (Ростов-на-Дону)',
-    goods: 'Шкафы для документов',
-    remains: 'Средне',
-    remainsColor: 'pending',
-    forecast: 'Необходимо пополнение в течение 3 недель'
-  }
+    warehouse: 'Склад 2 (Санкт-Петербург)',
+    goods: 'Конверты',
+    remains: 'Много',
+    remainsColor: 'active',
+    forecast: 'Пополнение не требуется'
+  },
+  {
+    warehouse: 'Склад 7 (Красноярск)',
+    goods: 'Файлы для документов',
+    remains: 'Много',
+    remainsColor: 'active',
+    forecast: 'Пополнение не требуется'
+  },
 ]
 
 const Table = () => {
@@ -107,7 +107,7 @@ const Table = () => {
                   variant='tonal'
                   color={
                     row.remainsColor === 'pending' ? 'warning' :
-                      row.remainsColor === 'inactive' ? 'secondary' :
+                      row.remainsColor === 'inactive' ? 'error' :
                         'success'
                   }
                   label={row.remains}

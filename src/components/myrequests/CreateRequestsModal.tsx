@@ -32,7 +32,7 @@ interface CreateRequestModalProps {
 }
 
 const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
-  const materials = ['Пакет п/э 200×300', 'Офисные стулья', 'Бумага А4', 'Картриджи'];
+  const materials = ['Пакет п/э 200×300', 'Скобы для степлера', 'Бумага А4', 'Картриджи', 'Офисные стулья'];
   const units = ['шт', 'кг', 'л', 'м'];
 
   const addRequest = useRequestsStore((state) => state.addRequest);
