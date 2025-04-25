@@ -14,7 +14,6 @@ import CreateRequestModal from '@components/myrequests/CreateRequestsModal'
 //Hooks
 import useRequestsStore from '@/store/requestStore'
 
-
 const Requests = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const handleOpenCreateModal = () => setIsCreateModalOpen(true)
@@ -22,6 +21,8 @@ const Requests = () => {
 
   const inProgressRequests = useRequestsStore(state => state.inProgressRequests)
   const completedRequests = useRequestsStore(state => state.completedRequests)
+  const cancelledRequests = useRequestsStore(state => state.cancelledRequests)
+
 
   return (
     <>
@@ -55,7 +56,6 @@ const Requests = () => {
       <RequestSection
         title="В работе"
         requests={inProgressRequests}
-        statusColor="warning"
         total={inProgressRequests.length}
       />
 
@@ -63,8 +63,14 @@ const Requests = () => {
       <RequestSection
         title="Выполненные"
         requests={completedRequests}
-        statusColor="success"
         total={completedRequests.length}
+      />
+
+      {/* Секция "Отмененные" */}
+      <RequestSection
+        title="Отменённые"
+        requests={cancelledRequests}
+        total={cancelledRequests.length}
       />
 
       {/* Модальное окно создания заявки */}

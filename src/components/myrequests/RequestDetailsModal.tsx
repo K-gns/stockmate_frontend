@@ -51,7 +51,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
 
       <DialogContent sx={{ px: 6, py: 3 }}>
         {/* Статус + Дата */}
-        <Box className="flex justify-between items-center mb-5">
+        <Box className="flex justify-between items-center mb-7">
           <Box
             sx={{
               backgroundColor:
@@ -91,12 +91,12 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
         </Box>
 
         {/* Материал + Кол-во */}
-        <Box className="flex justify-between mb-5 gap-4">
+        <Box className="flex justify-between mb-7 gap-4">
           {/* Материал */}
           <Box sx={{ flex: 1 }}>
             <Typography
               variant="body2"
-              color="text.secondary"
+              color="text.primary"
               fontWeight={500}
               sx={{ mb: 1 }}
             >
@@ -109,7 +109,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
           <Box sx={{ textAlign: 'right' }}>
             <Typography
               variant="body2"
-              color="text.secondary"
+              color="text.primary"
               fontWeight={500}
               sx={{ mb: 1 }}
             >
@@ -132,23 +132,32 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
         </Box>
 
         {/* Банк */}
-        <Box sx={{ mb: 5 }}>
+        <Box sx={{ mb: 7 }}>
           <Typography
             variant="body2"
-            color="text.secondary"
+            color="text.primary"
             fontWeight={500}
             sx={{ mb: 1 }}
           >
             Территориальный банк
           </Typography>
-          <Typography>{request.bank}</Typography>
+
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2.5 }}>
+            <Box
+              component="img"
+              src="/images/logo/sber_icon.png" // путь к иконке
+              alt="Банк"
+              sx={{ width: 20, height: 20 }}
+            />
+            <Typography>{request.bank}</Typography>
+          </Box>
         </Box>
 
         {/* Комментарий */}
         <Box sx={{ mb: 5 }}>
           <Typography
             variant="body2"
-            color="text.secondary"
+            color="text.primary"
             fontWeight={500}
             sx={{ mb: 1 }}
           >

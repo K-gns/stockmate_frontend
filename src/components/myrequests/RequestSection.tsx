@@ -9,9 +9,9 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 
+//Components
 import type { RequestType } from '@store/requestStore'
 import RequestDetailsModal from '@components/myrequests/RequestDetailsModal'
-
 
 
 interface RequestSectionProps {
@@ -82,6 +82,7 @@ const RequestSection = ({ title, requests, total }: RequestSectionProps) => {
                   <CardContent className="pr-[5rem] pb-[0.5rem]">
                     <Typography
                       variant="body1"
+                      color="text.primary"
                       className="font-semibold mb-1 text-sm"
                       sx={{
                         wordBreak: 'break-word', // Перенос слов

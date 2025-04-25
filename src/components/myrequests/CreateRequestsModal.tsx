@@ -22,6 +22,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import type { RequestType } from '@store/requestStore';
 import useRequestsStore from '@store/requestStore';
+import { banksData } from '@store/banksData'
 
 type FormData = Omit<RequestType, 'id' | 'date' | 'status'>;
 
@@ -33,7 +34,6 @@ interface CreateRequestModalProps {
 const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
   const materials = ['Пакет п/э 200×300', 'Офисные стулья', 'Бумага А4', 'Картриджи'];
   const units = ['шт', 'кг', 'л', 'м'];
-  const banks = ['Отделение1', 'Отделение2', 'Отделение3'];
 
   const addRequest = useRequestsStore((state) => state.addRequest);
 
@@ -43,6 +43,7 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
     unit: 'шт',
     bank: '',
     comment: '',
+    statusColor: 'inactive'
   });
 
   const handleChange = (field: keyof FormData) => (e: any) => {
@@ -173,7 +174,7 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
                 },
               }}
             >
-              {banks.map((bank) => (
+              {banksData.map((bank) => (
                 <MenuItem key={bank} value={bank}>
                   {bank}
                 </MenuItem>
