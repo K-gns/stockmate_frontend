@@ -2,9 +2,10 @@
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
 import Chip from '@mui/material/Chip'
+import ChevronRightIcon from '@mui/icons-material/ChevronRight'
 
 // Third-party Imports
-import classnames from 'classnames'
+
 
 // Components Imports
 import CustomAvatar from '@core/components/mui/Avatar'
@@ -34,11 +35,22 @@ const rowsData: TableBodyRowType[] = [
     department: 'Сбер девайсы',
     description: 'Стулья для IT отдела',
     quantity: 5,
-    status: 'Активна',
+    status: 'В работе',
     statusColor: 'active'
   },
   {
-    avatarSrc: '/images/avatars/2.png',
+    avatarSrc: '/images/avatars/6.png',
+    name: 'Алексей Соколов',
+    username: '@alexey_sokolov',
+    email: 'alexeySokolov@yandex.ru',
+    department: 'Сбер финансы',
+    description: 'Калькуляторы для бухгалтерии',
+    quantity: 15,
+    status: 'В работе',
+    statusColor: 'active'
+  },
+  {
+    avatarSrc: '/images/avatars/3.png',
     name: 'Сергей Петров',
     username: '@sergey_petrov',
     email: 'sergeyPetrov@yandex.ru',
@@ -49,18 +61,7 @@ const rowsData: TableBodyRowType[] = [
     statusColor: 'pending'
   },
   {
-    avatarSrc: '/images/avatars/3.png',
-    name: 'Анна Смирнова',
-    username: '@anna_smirnova',
-    email: 'annaSmirnova@yandex.ru',
-    department: 'Сбер аналитика',
-    description: 'Ноутбуки для аналитиков',
-    quantity: 10,
-    status: 'Завершена',
-    statusColor: 'inactive'
-  },
-  {
-    avatarSrc: '/images/avatars/4.png',
+    avatarSrc: '/images/avatars/5.png',
     name: 'Дмитрий Иванов',
     username: '@dmitry_ivanov',
     email: 'dmitryIvanov@yandex.ru',
@@ -71,7 +72,18 @@ const rowsData: TableBodyRowType[] = [
     statusColor: 'pending'
   },
   {
-    avatarSrc: '/images/avatars/5.png',
+    avatarSrc: '/images/avatars/8.png',
+    name: 'Мария Попова',
+    username: '@maria_popova',
+    email: 'mariaPopova@yandex.ru',
+    department: 'Сбер HR',
+    description: 'Канцелярия для отдела кадров',
+    quantity: 20,
+    status: 'На уточнении',
+    statusColor: 'pending'
+  },
+  {
+    avatarSrc: '/images/avatars/4.png',
     name: 'Ольга Кузнецова',
     username: '@olga_kuznetsova',
     email: 'olgaKuznetsova@yandex.ru',
@@ -82,27 +94,16 @@ const rowsData: TableBodyRowType[] = [
     statusColor: 'inactive'
   },
   {
-    avatarSrc: '/images/avatars/6.png',
-    name: 'Алексей Соколов',
-    username: '@alexey_sokolov',
-    email: 'alexeySokolov@yandex.ru',
-    department: 'Сбер финансы',
-    description: 'Калькуляторы для бухгалтерии',
-    quantity: 15,
-    status: 'Активна',
-    statusColor: 'active'
+    avatarSrc: '/images/avatars/2.png',
+    name: 'Анна Смирнова',
+    username: '@anna_smirnova',
+    email: 'annaSmirnova@yandex.ru',
+    department: 'Сбер аналитика',
+    description: 'Ноутбуки для аналитиков',
+    quantity: 10,
+    status: 'Завершена',
+    statusColor: 'inactive'
   },
-  {
-    avatarSrc: '/images/avatars/7.png',
-    name: 'Мария Попова',
-    username: '@maria_popova',
-    email: 'mariaPopova@yandex.ru',
-    department: 'Сбер HR',
-    description: 'Канцелярия для отдела кадров',
-    quantity: 20,
-    status: 'На уточнении',
-    statusColor: 'pending'
-  }
 ]
 
 const Table = () => {
@@ -118,6 +119,7 @@ const Table = () => {
             <th>Описание заявки</th>
             <th>Количество, шт</th>
             <th>Статус заявки</th>
+            <th>Анализ</th>
           </tr>
           </thead>
           <tbody>
@@ -125,7 +127,7 @@ const Table = () => {
             <tr key={index}>
               <td className='!plb-1'>
                 <div className='flex items-center gap-3'>
-                  <CustomAvatar src={row.avatarSrc} size={34}/>
+                  <CustomAvatar src={row.avatarSrc} size={34} />
                   <div className='flex flex-col'>
                     <Typography color='text.primary' className='font-medium'>
                       {row.name}
@@ -158,6 +160,15 @@ const Table = () => {
                   label={row.status}
                   size='small'
                 />
+              </td>
+              <td className='!pb-1'>
+                <a
+                  href={`/analysis/${index}`} // или другой путь, если есть ID
+                  className='flex items-center gap-1 text-primary underline hover:no-underline'
+                >
+                  <span>Перейти</span>
+                  <ChevronRightIcon fontSize="small" />
+                </a>
               </td>
             </tr>
           ))}
