@@ -85,26 +85,21 @@ const HorizontalMenu = () => {
           menuSectionStyles: verticalMenuSectionStyles(verticalNavOptions, theme)
         }}
       >
-        <MenuItem
-          href='/my-requests'
-          icon={<i className='ri-download-line' />}
-        >
+        <MenuItem href='/my-requests' icon={<i className='ri-download-line' />}>
           Мои заявки
         </MenuItem>
 
-        <MenuItem
-          href='/my-responses'
-          icon={<i className='ri-team-line' />}
-        >
-          Мои ответы
-        </MenuItem>
+        {localStorage.getItem('user') === 'admin' && (
+          <MenuItem href='/my-responses' icon={<i className='ri-team-line' />}>
+            Мои ответы
+          </MenuItem>
+        )}
 
-        <MenuItem
-          href='/provisions'
-          icon={<i className='ri-database-line' />}
-        >
-          Запасы
-        </MenuItem>
+        {localStorage.getItem('user') === 'admin' && (
+          <MenuItem href='/provisions' icon={<i className='ri-database-line' />}>
+            Запасы
+          </MenuItem>
+        )}
         {/*<MenuItem href='/about' icon={<i className='ri-information-line' />}>*/}
         {/*  About*/}
         {/*</MenuItem>*/}

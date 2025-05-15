@@ -24,6 +24,8 @@ import Button from '@mui/material/Button'
 // Hook Imports
 import { useSettings } from '@core/hooks/useSettings'
 
+import useAuthStore from '@store/authStore'
+
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
   width: 8,
@@ -35,6 +37,8 @@ const BadgeContentSpan = styled('span')({
 })
 
 const UserDropdown = () => {
+
+  const { user } = useAuthStore()
   // States
   const [open, setOpen] = useState(false)
 
@@ -63,8 +67,8 @@ const UserDropdown = () => {
   }
 
   const handleUserLogout = async () => {
-    // Redirect to login page
-    router.push('/login')
+    useAuthStore.getState().logout()
+    router.push('/auth')
   }
 
   return (
@@ -106,9 +110,9 @@ const UserDropdown = () => {
                     <Avatar alt='John Doe' src='/images/avatars/1.png' />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
-                        Админ Админов
+                        {user?.name === 'admin' ? 'Администратор' : "Сотрудник"}
                       </Typography>
-                      <Typography variant='caption'>admin</Typography>
+                      <Typography variant='caption'>{user?.name}</Typography>
                     </div>
                   </div>
                   <Divider className='mlb-1' />
