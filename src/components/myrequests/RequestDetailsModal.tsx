@@ -126,7 +126,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
                 display: 'inline-block'
               }}
             >
-              {request.count.toLocaleString()} {request.unit}
+              {request?.count?.toLocaleString()} {request.unit}
             </Box>
           </Box>
         </Box>
@@ -149,7 +149,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
               alt="Банк"
               sx={{ width: 20, height: 20 }}
             />
-            <Typography>{request.bank}</Typography>
+            <Typography>{request.current_tb}</Typography>
           </Box>
         </Box>
 

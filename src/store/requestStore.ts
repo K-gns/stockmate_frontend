@@ -6,9 +6,11 @@ export interface RequestType {
   id: number;
   material: string;
   date: string;
-  count: number;
+  count?: number;
+  count_months?: number;
   unit: string;
-  bank: string;
+  current_tb: string;
+  not_tb?: string[];
   comment?: string;
   status: 'На уточнении' | 'В работе' | 'Завершена' | 'Отменена';
   statusColor: 'pending' | 'inactive' | 'active' | 'cancelled' | 'completed';
