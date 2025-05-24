@@ -3,7 +3,7 @@ FROM node:18-alpine AS development
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 RUN npm install -g pnpm
 
@@ -21,7 +21,7 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY package.json pnpm-lock.yaml ./
 
 RUN npm install -g pnpm
 
