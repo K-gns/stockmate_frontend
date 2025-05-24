@@ -5,7 +5,9 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install -g pnpm
+
+RUN pnpm i
 
 COPY . .
 
@@ -21,11 +23,14 @@ WORKDIR /app
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install -g pnpm
+
+
+RUN pnpm install
 
 COPY . .
 
-RUN npm run build
+RUN pnpm run build
 
 # Production Stage
 
@@ -33,13 +38,19 @@ FROM node:18-alpine AS production
 
 WORKDIR /app
 
-# Copy the built artifacts from the builder stage
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./.next/static
+RUN npm install -g pnpm
 
-# Set the environment variables (if needed)
+# Копируем собранные артефакты
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+
+# Переменные окружения
 ENV NODE_ENV=production
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["pnpm", "start"]
+
