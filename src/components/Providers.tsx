@@ -9,6 +9,8 @@ import ThemeProvider from '@components/theme'
 // Util Imports
 import { getDemoName, getMode, getSettingsFromCookie, getSystemMode } from '@core/utils/serverHelpers'
 
+import AuthControl from '@components/AuthControl'
+
 type Props = ChildrenType & {
   direction: Direction
 }
@@ -27,6 +29,7 @@ const Providers = (props: Props) => {
     <VerticalNavProvider>
       <SettingsProvider settingsCookie={settingsCookie} mode={mode} demoName={demoName}>
         <ThemeProvider direction={direction} systemMode={systemMode}>
+          <AuthControl />
           {children}
         </ThemeProvider>
       </SettingsProvider>

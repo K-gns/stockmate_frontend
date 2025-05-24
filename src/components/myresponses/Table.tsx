@@ -43,7 +43,7 @@ const rowsData: TableBodyRowType[] = [
     department: banksData[0],
     material: materialsData[0],
     description: 'Для IT отдела',
-    quantity: 5,
+    quantity: 10345,
     status: 'В работе',
     statusColor: 'active'
   },
@@ -55,7 +55,7 @@ const rowsData: TableBodyRowType[] = [
     department: banksData[0],
     material: materialsData[1],
     description: 'Для бухгалтерии',
-    quantity: 15,
+    quantity: 500,
     status: 'В работе',
     statusColor: 'active'
   },
@@ -67,7 +67,7 @@ const rowsData: TableBodyRowType[] = [
     department: banksData[2],
     material: materialsData[2],
     description: 'Для операционного',
-    quantity: 2,
+    quantity: 1020,
     status: 'На уточнении',
     statusColor: 'pending'
   },
@@ -79,7 +79,7 @@ const rowsData: TableBodyRowType[] = [
     department: banksData[3],
     material: materialsData[4],
     description: 'Для разработчиков',
-    quantity: 8,
+    quantity: 20,
     status: 'На уточнении',
     statusColor: 'pending'
   },
@@ -91,7 +91,7 @@ const rowsData: TableBodyRowType[] = [
     department: banksData[3],
     material: materialsData[3],
     description: 'Для отдела кадров',
-    quantity: 20,
+    quantity: 120,
     status: 'На уточнении',
     statusColor: 'pending'
   },
@@ -103,7 +103,7 @@ const rowsData: TableBodyRowType[] = [
     department: banksData[4],
     material: materialsData[3],
     description: 'Для операционного',
-    quantity: 3,
+    quantity: 260,
     status: 'Завершена',
     statusColor: 'inactive'
   },
@@ -115,7 +115,7 @@ const rowsData: TableBodyRowType[] = [
     department: banksData[5],
     material: materialsData[2],
     description: 'Для аналитиков',
-    quantity: 10,
+    quantity: 1502,
     status: 'Завершена',
     statusColor: 'inactive'
   }

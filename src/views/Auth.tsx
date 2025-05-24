@@ -1,7 +1,9 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+
 import { useRouter } from 'next/navigation'
+
 import { Input, InputAdornment, IconButton, Button } from '@mui/material'
 import { Visibility, VisibilityOff, Clear } from '@mui/icons-material'
 
@@ -14,6 +16,7 @@ const Auth = () => {
   const login = useAuthStore(state => state.login)
   const user = useAuthStore(state => state.user)
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (user) {
@@ -21,11 +24,19 @@ const Auth = () => {
     }
   }, [user, router])
 
-  const handleLogin = () => {
-    if (username.trim() && password.trim()) {
-      login({ name: username })
-    } else {
-      alert('Введите логин и пароль')
+  const handleLogin = async () => {
+    setError(null)
+
+    if (!username.trim() || !password.trim()) {
+      setError('Введите логин и пароль')
+
+      return
+    }
+
+    try {
+      await login(username, password)
+    } catch (e: any) {
+      setError(e.message || 'Ошибка входа')
     }
   }
 
@@ -60,6 +71,7 @@ const Auth = () => {
         }}
       >
         <h1>Авторизация StockMate</h1>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
         <Input
           type='text'
           placeholder='Введите логин'
