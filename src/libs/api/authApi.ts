@@ -3,8 +3,8 @@ import axios from 'axios';
 
 // Инстанс axios
 const apiClient: AxiosInstance = axios.create({
-  // baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1',
-  baseURL: '/api/v1',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || '/api/v1',
+  // baseURL: '/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -27,7 +27,7 @@ const authApi = {
    * @returns токены доступа и обновления
    */
   login: async (email: string, password: string): Promise<LoginResponse> => {
-    const response: AxiosResponse<LoginResponse> = await apiClient.post('http://localhost:8000/api/v1/auth/token/', {
+    const response: AxiosResponse<LoginResponse> = await apiClient.post('/auth/token/', {
       email,
       password,
     });
