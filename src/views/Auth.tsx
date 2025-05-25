@@ -20,7 +20,7 @@ const Auth = () => {
 
   useEffect(() => {
     if (user) {
-      router.push('/home')
+      router.push('/my-requests')
     }
   }, [user, router])
 

@@ -12,6 +12,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'
 //Components
 import type { RequestType } from '@store/requestStore'
 import RequestDetailsModal from '@components/myrequests/RequestDetailsModal'
+import { pluralize } from '@/utils/pluralize'
 
 
 interface RequestSectionProps {
@@ -24,6 +25,7 @@ const RequestSection = ({ title, requests, total }: RequestSectionProps) => {
   const theme = useTheme()
   const [visibleCount, setVisibleCount] = useState(3)
   const hasMore = visibleCount < requests.length
+  const remaining = requests.length - visibleCount;
 
   const [selectedRequest, setSelectedRequest] = useState<RequestType | null>(null);
 
@@ -89,7 +91,7 @@ const RequestSection = ({ title, requests, total }: RequestSectionProps) => {
                         minHeight: '2.5rem'
                       }}
                     >
-                      {request.material}
+                      [{request.material}] {request.materialName}
                     </Typography>
 
                     {/* Блок с датой и иконкой */}
@@ -138,7 +140,9 @@ const RequestSection = ({ title, requests, total }: RequestSectionProps) => {
                         borderRadius: 0.5
                       }}
                     >
-                      {request.count + ' шт'}
+                      {request.count_months != null
+                        ? `на ${request.count_months} ${pluralize(request.count_months, ['месяц', 'месяца', 'месяцев'])}`
+                        : `${request.count} шт`}
                     </Box>
 
                     <IconButton
@@ -166,7 +170,7 @@ const RequestSection = ({ title, requests, total }: RequestSectionProps) => {
                 onClick={handleShowMore}
                 startIcon={<ArrowDownwardIcon />}
               >
-                Показать еще 6
+                Показать ещё {remaining}
               </Button>
             </Box>
           )}

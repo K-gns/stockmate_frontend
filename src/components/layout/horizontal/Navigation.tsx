@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
 // Third-party Imports
 import styled from '@emotion/styled'
 import classnames from 'classnames'
 
 // Component Imports
-import HorizontalMenu from './HorizontalMenu'
+import HorizontalMenuClient from './HorizontalMenu.client'
 
 // Config Imports
 import themeConfig from '@configs/themeConfig'
@@ -59,7 +59,7 @@ const Navigation = () => {
           className: classnames(horizontalLayoutClasses.navigationContentWrapper, 'flex items-center is-full plb-2.5')
         })}
       >
-        <HorizontalMenu />
+        <HorizontalMenuClient />
       </StyledDiv>
     </div>
   )

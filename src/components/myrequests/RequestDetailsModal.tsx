@@ -15,6 +15,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 import type { RequestType } from '@store/requestStore'
 
 import useRequestsStore from '@store/requestStore'
+import {pluralize} from "@/utils/pluralize";
 
 interface Props {
   open: boolean;
@@ -39,7 +40,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
       <DialogTitle>
         <Box className="flex justify-between items-center">
           <Typography variant="h6" fontWeight={600}>
-            {request.material}
+            [{request.material}] {request.materialName}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -102,7 +103,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
             >
               Материал
             </Typography>
-            <Typography>{request.material}</Typography>
+            <Typography>[{request.material}] {request.materialName}</Typography>
           </Box>
 
           {/* Количество */}
@@ -126,7 +127,11 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
                 display: 'inline-block'
               }}
             >
-              {request?.count?.toLocaleString()} {request.unit}
+              {request.count_months != null ? (
+                <>на {request.count_months} {pluralize(request.count_months, ['месяц', 'месяца', 'месяцев'])}</>
+              ) : (
+                <>{request.count?.toLocaleString()} {request.unit}</>
+              )}
             </Box>
           </Box>
         </Box>
@@ -170,7 +175,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
       </DialogContent>
 
       <DialogActions sx={{ px: 4, py: 7 }}>
-        {request.status === 'Завершена' ? (
+        {request.status === 'Выполнена' ? (
           <Button
             variant="contained"
             color="primary"

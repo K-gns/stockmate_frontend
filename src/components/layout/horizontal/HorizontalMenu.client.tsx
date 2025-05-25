@@ -1,5 +1,4 @@
-// Do not remove this following 'use client' else SubMenu rendered in vertical menu on smaller screen will not work.
-'use client'
+'use client';
 
 // MUI Imports
 import { useTheme } from '@mui/material/styles'
@@ -25,6 +24,7 @@ import menuRootStyles from '@core/styles/horizontal/menuRootStyles'
 import menuItemStyles from '@core/styles/horizontal/menuItemStyles'
 import verticalMenuItemStyles from '@core/styles/vertical/menuItemStyles'
 import verticalMenuSectionStyles from '@core/styles/vertical/menuSectionStyles'
+import {useEffect, useState } from 'react';
 
 type RenderExpandIconProps = {
   level?: number
@@ -47,7 +47,7 @@ const RenderVerticalExpandIcon = ({ open, transitionDuration }: RenderVerticalEx
   </StyledVerticalNavExpandIcon>
 )
 
-const HorizontalMenu = () => {
+const HorizontalMenuClient = () => {
   // Hooks
   const verticalNavOptions = useVerticalNav()
   const theme = useTheme()
@@ -56,6 +56,13 @@ const HorizontalMenu = () => {
   // Vars
   const { skin } = settings
   const { transitionDuration } = verticalNavOptions
+
+  const [user, setUser] = useState<string | null>(null);
+
+  // only runs in browser after mount
+  useEffect(() => {
+    setUser(window.localStorage.getItem('email'));
+  }, []);
 
   return (
     <HorizontalNav
@@ -89,13 +96,13 @@ const HorizontalMenu = () => {
           Мои заявки
         </MenuItem>
 
-        {localStorage.getItem('user') === 'admin' && (
+        {user === "admin@mail.ru" && (
           <MenuItem href='/my-responses' icon={<i className='ri-team-line' />}>
             Мои ответы
           </MenuItem>
         )}
 
-        {localStorage.getItem('user') === 'admin' && (
+        {user === 'admin@mail.ru' && (
           <MenuItem href='/provisions' icon={<i className='ri-database-line' />}>
             Запасы
           </MenuItem>
@@ -129,4 +136,4 @@ const HorizontalMenu = () => {
   )
 }
 
-export default HorizontalMenu
+export default HorizontalMenuClient

@@ -52,6 +52,7 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
 
   const [formData, setFormData] = useState<FormData>({
     material: '',
+    materialName: '',
     count: 0,
     unit: 'шт',
     current_tb: '',
@@ -363,7 +364,12 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
           variant="contained"
           color="primary"
           onClick={handleSubmit}
-          disabled={!formData.material || !formData.count || !formData.unit}
+          disabled={
+            !formData.material ||
+            (mode === 'quantity'
+              ? !(formData?.count && formData.count > 0) || !formData.unit
+              : formData.count_months == null)
+          }
           sx={{ mb: 2, borderRadius: 2 }}
         >
           Создать заявку

@@ -1,15 +1,29 @@
-import type { AxiosInstance, AxiosResponse } from 'axios';
+import type {AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import axios from 'axios';
+import useAuthStore from "@store/authStore";
 
 // Инстанс axios
 const apiClient: AxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || '/api/v1',
+  baseURL: 'http://188.92.28.153/api/v1' || '/api/v1',
   // baseURL: '/api/v1',
   headers: {
     'Content-Type': 'application/json',
   },
   withCredentials: true,
 });
+
+//Разлогин при 401 forbidden с сервера
+apiClient.interceptors.response.use(
+  response => response,
+  (error: AxiosError) => {
+    if (error.response?.status === 401) {
+      // разлогиним пользователя
+      const logout = useAuthStore.getState().logout;
+      logout();
+    }
+    return Promise.reject(error);
+  }
+);
 
 // Интерфейсы для ответов API
 export interface LoginResponse {

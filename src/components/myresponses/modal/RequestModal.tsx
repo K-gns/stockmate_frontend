@@ -92,7 +92,7 @@ const RequestModal = () => {
                 <CustomAvatar src={selectedRequest.avatarSrc} size={34} />
                 <div className="flex flex-col">
                   <Typography color="text.primary" className="font-medium">
-                    {selectedRequest.name}
+                    {selectedRequest?.name}
                   </Typography>
                   <Typography variant="body2">{selectedRequest.email}</Typography>
                 </div>

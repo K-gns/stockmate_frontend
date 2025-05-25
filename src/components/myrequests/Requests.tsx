@@ -1,7 +1,9 @@
-import { useState } from 'react'
+"use client"
+
+import {useState, useEffect} from 'react'
 
 //MUI
-import { Box, Button, TextField } from '@mui/material'
+import {Box, Button, TextField} from '@mui/material'
 
 //Icons
 import FilterListIcon from '@mui/icons-material/FilterList'
@@ -10,6 +12,7 @@ import AddIcon from '@mui/icons-material/Add'
 //Components
 import RequestSection from '@components/myrequests/RequestSection'
 import CreateRequestModal from '@components/myrequests/CreateRequestsModal'
+import shallow from 'zustand/shallow'
 
 //Hooks
 import useRequestsStore from '@/store/requestStore'
@@ -19,10 +22,21 @@ const Requests = () => {
   const handleOpenCreateModal = () => setIsCreateModalOpen(true)
   const handleCloseCreateModal = () => setIsCreateModalOpen(false)
 
-  const inProgressRequests = useRequestsStore(state => state.inProgressRequests)
-  const completedRequests = useRequestsStore(state => state.completedRequests)
-  const cancelledRequests = useRequestsStore(state => state.cancelledRequests)
+  // const fetchAll = useRequestsStore(state => state.fetchAll)
 
+  const fetchAll             = useRequestsStore(s => s.fetchAll)
+  const loading              = useRequestsStore(s => s.loading)
+  const error                = useRequestsStore(s => s.error)
+  const inProgressRequests   = useRequestsStore(s => s.inProgressRequests)
+  const completedRequests    = useRequestsStore(s => s.completedRequests)
+  const cancelledRequests    = useRequestsStore(s => s.cancelledRequests)
+
+  useEffect(() => {
+    fetchAll()
+  }, [])
+
+  if (loading) return <div>Загрузка...</div>
+  if (error) return <div style={{color: 'red'}}>Ошибка: {error}</div>
 
   return (
     <>
@@ -36,14 +50,14 @@ const Requests = () => {
         <Box className="flex gap-2">
           <Button
             variant="outlined"
-            startIcon={<FilterListIcon />}
+            startIcon={<FilterListIcon/>}
             className="normal-case"
           >
             Фильтры
           </Button>
           <Button
             variant="contained"
-            startIcon={<AddIcon />}
+            startIcon={<AddIcon/>}
             className="normal-case"
             onClick={handleOpenCreateModal}
           >
@@ -55,22 +69,22 @@ const Requests = () => {
       {/* Секция "В работе" */}
       <RequestSection
         title="В работе"
-        requests={inProgressRequests}
-        total={inProgressRequests.length}
+        requests={inProgressRequests || []}
+        total={inProgressRequests?.length}
       />
 
       {/* Секция "Выполненные" */}
       <RequestSection
         title="Выполненные"
-        requests={completedRequests}
-        total={completedRequests.length}
+        requests={completedRequests || []}
+        total={completedRequests?.length}
       />
 
       {/* Секция "Отмененные" */}
       <RequestSection
         title="Отменённые"
-        requests={cancelledRequests}
-        total={cancelledRequests.length}
+        requests={cancelledRequests || []}
+        total={cancelledRequests?.length}
       />
 
       {/* Модальное окно создания заявки */}
