@@ -1,21 +1,28 @@
+"use client"
+
 import { create } from 'zustand'
 
-// import { generateMockRequests, inProgressRequests } from '@/utils/mockRequests'
-import appealsApi, {mapAppeal} from "@/libs/api/appealsApi";
+import appealsApi, {AnalysisResult, CreateRequestParams, mapAppeal, UserSummary} from "@/libs/api/appealsApi";
+import {toast} from "react-toastify";
+import {materialsMap, warehousesMap} from "@store/materialsNames";
 
 export interface RequestType {
   id: number;
-  material: string;
+  material_id: string;
   materialName: string;
   date: string;
-  count?: number;
+  target_count?: number;
   count_months?: number;
   unit: string;
   current_tb: string;
+  current_tb_name: string;
   not_tb?: string[];
   comment?: string;
   status: 'На уточнении' | 'В работе' | 'Выполнена' | 'Отменена';
   statusColor: 'pending' | 'inactive' | 'active' | 'cancelled' | 'completed';
+  author?: UserSummary;
+  analysis?: AnalysisResult;
+
 }
 
 type RequestsState = {
@@ -28,7 +35,8 @@ type RequestsState = {
 
 type RequestsActions = {
   fetchAll:       () => Promise<void>
-  addRequest:    (newRequest: Omit<RequestType, 'id' | 'date' | 'status' | 'statusColor'>) => void
+  createRequest:    (newRequest: CreateRequestParams) => Promise<RequestType>
+  addRequest:    (params: CreateRequestParams & { comment?: string }) => void
   cancelRequest: (id: number) => Promise<void>
 }
 
@@ -57,27 +65,52 @@ const useRequestsStore = create<RequestsState & RequestsActions>((set, get) => (
     }
   },
 
-  addRequest: (newRequest) => {
+  createRequest: async (params: CreateRequestParams): Promise<RequestType> => {
+    set({ loading: true, error: null })
+    try {
+      const newRequest = await appealsApi.create(params)
+      set(state => ({
+        inProgressRequests: [newRequest, ...state.inProgressRequests],
+        loading: false
+      }))
+      toast.success('Заявка успешно создана')
+      return newRequest
+    } catch (e: any) {
+      const message = e.response?.data?.detail || e.message || 'Неизвестная ошибка'
+      set({ error: message, loading: false })
+      console.error('createRequest error:', e)
+      toast.error(`Не удалось создать заявку: ${message}`)
+      throw e
+    } finally {
+      set({ loading: false })
+    }
+  },
+
+  addRequest: (params: CreateRequestParams & { comment?: string }) => {
     const id = Date.now()
     const date = new Date().toLocaleDateString('ru-RU')
+    const materialIdStr = String(params.material_id)
+
+
+    const newReq: RequestType = {
+      id,
+      material_id:     materialIdStr,
+      materialName:    materialsMap[params.material_id] ?? '',
+      date,
+      target_count:    params.target_count,
+      count_months:    params.count_months,
+      unit:            'шт',
+      current_tb:      params.current_tb,
+      current_tb_name: warehousesMap[params.current_tb] ?? '',
+      not_tb:          params.not_tb,
+      comment:         params.comment,
+      status:          'На уточнении',
+      statusColor:     'pending',
+      author:          undefined,
+    }
+
     set(state => ({
-      inProgressRequests: [
-        {
-          id,
-          material: newRequest.material,
-          materialName: newRequest.materialName,
-          date,
-          count: newRequest.count,
-          count_months: newRequest.count_months,
-          unit: newRequest.unit,
-          current_tb: newRequest.current_tb,
-          not_tb: newRequest.not_tb,
-          comment: newRequest.comment,
-          status: 'На уточнении',
-          statusColor: 'pending',
-        },
-        ...state.inProgressRequests,
-      ],
+      inProgressRequests: [newReq, ...state.inProgressRequests]
     }))
   },
 

@@ -1,7 +1,7 @@
 import type { AxiosInstance, AxiosResponse } from 'axios';
 import { apiClient } from './authApi';
 import {RequestType} from "@store/requestStore";
-import {materialsMap} from "@store/materialsNames";
+import {materialsMap, warehousesMap} from "@store/materialsNames";
 
 export interface UserSummary {
   username: string;
@@ -16,7 +16,6 @@ export interface AnalysisData {
   target_count: number;
   count_months: number;
   not_tb: string[];
-  // ... остальные поля
   created_at: string;
 }
 
@@ -27,9 +26,14 @@ export interface AnalysisRetrieve {
 }
 
 export interface AnalysisResult {
-  id: number;
-  result: any;
-  created_at: string;
+  id: number
+  result: {
+    target_tb: string
+    target_count: number
+    message: string
+    data: Record<string, any>[]
+  }
+  created_at: string
 }
 
 export interface AppealStatusRetrieve {
@@ -50,6 +54,22 @@ export interface AppealRetrieve {
 
 // --- Ответ при листинге ---
 export type AppealsListResponse = AppealRetrieve[];
+
+//Запрос создания
+export interface CreateRequestParams {
+  material_id: number;
+  current_tb: string;
+  target_count?: number;
+  count_months?: number;
+  not_tb: string[];
+  // следующие поля необязательны, для удобства можно переопределять
+  left_file_path?: string;
+  left_sheet_name?: string;
+  consumption_file_path?: string;
+  consumption_sheet_name?: string;
+  consumption_tb_column_name?: string;
+}
+
 
 
 
@@ -75,12 +95,47 @@ export const appealsApi = {
   /**
    * Создать новую заявок
    */
-  create: async (payload: Partial<AppealRetrieve>): Promise<AppealRetrieve> => {
-    const resp: AxiosResponse<AppealRetrieve> = await apiClient.post('/appeals/', payload);
+  create: async (
+    params: CreateRequestParams
+  ): Promise<RequestType> => {
+    console.log("params in api", params)
 
-    console.log(resp)
+    const data : any = {
+          material_id: params.material_id,
+          current_tb: params.current_tb,
+          target_count: params.target_count,
+          not_tb: params.not_tb.join(" "),
+          left_file_path:             params.left_file_path             ?? '/app/data/ОСТАТКИ.XLSX',
+          left_sheet_name:            params.left_sheet_name            ?? 'Sheet1',
+          consumption_file_path:      params.consumption_file_path      ?? '/app/data/Потребление.XLSX',
+          consumption_sheet_name:     params.consumption_sheet_name     ?? 'Sheet1',
+          consumption_tb_column_name: params.consumption_tb_column_name ?? 'Завод',
+    };
 
-    return resp.data;
+    if (typeof params.count_months === 'number') {
+      // @ts-ignore
+      data.count_months = params.count_months;
+    } else {
+      // @ts-ignore
+      data.target_count = params.target_count ?? 0;
+    }
+
+    const payload = {
+      analysis: { data }
+    };
+
+    console.log("CreateRequest payload:", payload)
+
+
+    const resp: AxiosResponse<AppealRetrieve> = await apiClient.post(
+      '/appeals/',
+      payload
+    );
+
+    console.log("CreateRequest resp:", resp.data)
+
+
+    return mapAppeal(resp.data);
   },
 
   /**
@@ -102,23 +157,39 @@ export const   mapAppeal = (a: AppealRetrieve): RequestType => {
     'Отменена':      'cancelled',
   }
 
+  // Данные анализа
+  const analysisData = a.analysis.data
+  // Результат анализа
+  // @ts-ignore
+  const analysisResultData = a.analysis.result?.result
+
   const { data } = a?.analysis;
   const materialId = data.material_id;
   const materialName = materialsMap[materialId] ?? '';
 
+  const current_tb = a.analysis.data.current_tb ?? '';
+  const current_tb_name = warehousesMap[current_tb] ?? '';
+
   return {
     id:           a.id,
-    material:     String(a.analysis.data.material_id),
+    author:         a?.author,
+    material_id:     String(a.analysis.data.material_id),
     materialName,
     date:         new Date(a.created_at).toLocaleDateString('ru-RU'),
-    count:        a.analysis.data.target_count ?? undefined,
+    target_count:        a.analysis.data.target_count ?? undefined,
     count_months: a.analysis.data.count_months ?? undefined,
     unit:         'шт',  // если всегда шт
-    current_tb:   a.analysis.data.current_tb ?? '',
+    current_tb,
+    current_tb_name,
     not_tb:       a.analysis.data.not_tb ? a.analysis.data.not_tb : [],
     comment:      undefined,
     status:       a.status?.name || "В работе",
     statusColor:  statusColorMap[a.status?.name || "В работе"],
+    analysis: {
+      // @ts-ignore
+      data: analysisData,
+      result: analysisResultData,
+    },
   }
 }
 

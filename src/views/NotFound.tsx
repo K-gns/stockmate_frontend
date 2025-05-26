@@ -39,7 +39,7 @@ const NotFound = ({ mode }: { mode: Mode }) => {
           src='/images/illustrations/characters/9.png'
           className='object-cover bs-[400px] md:bs-[450px] lg:bs-[500px]'
         />
-        <Button href='/' component={Link} variant='contained'>
+        <Button href='/my-requests' component={Link} variant='contained'>
           Back to Home
         </Button>
       </div>

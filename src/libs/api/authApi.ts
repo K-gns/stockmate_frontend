@@ -1,6 +1,7 @@
 import type {AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import axios from 'axios';
 import useAuthStore from "@store/authStore";
+import {toast} from "react-toastify";
 
 // Инстанс axios
 const apiClient: AxiosInstance = axios.create({
@@ -20,6 +21,8 @@ apiClient.interceptors.response.use(
       // разлогиним пользователя
       const logout = useAuthStore.getState().logout;
       logout();
+    } else {
+      toast.error(`Не удалось выполнить запрос: ${error.response?.status}`)
     }
     return Promise.reject(error);
   }

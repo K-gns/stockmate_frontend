@@ -91,7 +91,7 @@ const RequestSection = ({ title, requests, total }: RequestSectionProps) => {
                         minHeight: '2.5rem'
                       }}
                     >
-                      [{request.material}] {request.materialName}
+                      [{request.material_id}] {request.materialName}
                     </Typography>
 
                     {/* Блок с датой и иконкой */}
@@ -118,8 +118,9 @@ const RequestSection = ({ title, requests, total }: RequestSectionProps) => {
                   <Box
                     sx={{
                       position: 'absolute',
-                      top: 16,
+                      top: { xs: 'auto', sm: 16 },
                       right: 8,
+                      bottom: { xs: 10, sm: 'auto' },
                       display: 'flex',
                       alignItems: 'center',
                       gap: 1,
@@ -142,12 +143,13 @@ const RequestSection = ({ title, requests, total }: RequestSectionProps) => {
                     >
                       {request.count_months != null
                         ? `на ${request.count_months} ${pluralize(request.count_months, ['месяц', 'месяца', 'месяцев'])}`
-                        : `${request.count} шт`}
+                        : `${request.target_count} шт`}
                     </Box>
 
                     <IconButton
                       size="small"
                       sx={{
+                        display: { xs: 'none', sm: 'inline-flex' },
                         padding: 1,
                         '&:hover': { bgcolor: 'transparent' }
                       }}

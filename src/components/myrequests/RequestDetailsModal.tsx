@@ -40,7 +40,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
       <DialogTitle>
         <Box className="flex justify-between items-center">
           <Typography variant="h6" fontWeight={600}>
-            [{request.material}] {request.materialName}
+            [{request.material_id}] {request.materialName}
           </Typography>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -103,7 +103,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
             >
               Материал
             </Typography>
-            <Typography>[{request.material}] {request.materialName}</Typography>
+            <Typography>[{request.material_id}] {request.materialName}</Typography>
           </Box>
 
           {/* Количество */}
@@ -130,7 +130,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
               {request.count_months != null ? (
                 <>на {request.count_months} {pluralize(request.count_months, ['месяц', 'месяца', 'месяцев'])}</>
               ) : (
-                <>{request.count?.toLocaleString()} {request.unit}</>
+                <>{request.target_count?.toLocaleString()} {request.unit}</>
               )}
             </Box>
           </Box>
@@ -154,7 +154,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
               alt="Банк"
               sx={{ width: 20, height: 20 }}
             />
-            <Typography>{request.current_tb}</Typography>
+            <Typography>[{request.current_tb}] {request.current_tb_name}</Typography>
           </Box>
         </Box>
 
@@ -169,7 +169,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
             Комментарий
           </Typography>
           <Typography whiteSpace="pre-line">
-            {request.comment || '—'}
+            {request.comment}
           </Typography>
         </Box>
       </DialogContent>
@@ -184,6 +184,7 @@ const RequestDetailsModal = ({ open, onClose, request }: Props) => {
               // Повторить заявку
               const { id, date, status, statusColor, ...rest } = request
 
+              //@ts-ignore
               addRequest(rest)
               onClose()
             }}

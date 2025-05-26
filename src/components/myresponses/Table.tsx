@@ -1,3 +1,5 @@
+'use client'
+
 // MUI Imports
 import Typography from '@mui/material/Typography'
 import Card from '@mui/material/Card'
@@ -19,115 +21,66 @@ import { RequestData, useSelectedRequestStore } from '@store/modals/selectedRequ
 import RequestModal from './modal/RequestModal'
 import { materialsData } from '@store/materialsData'
 import { banksData } from '@store/banksData'
+import useRequestsStore, {RequestType} from "@store/requestStore";
+import { useEffect } from 'react'
+import {pluralize} from "@/utils/pluralize";
+import {materialsMap, warehousesMap} from "@store/materialsNames";
 
 type TableBodyRowType = {
-  avatarSrc?: string
-  name: string
-  username: string
-  email: string
-  department: string
-  material: string
-  description: string
-  quantity: number
-  status: string
-  statusColor: string
+  avatarSrc?:    string
+  name?:         string
+  username?:     string
+  email?:        string
+  current_tb_name: string
+  material:        string
+  description:     string
+  target_count?:    number,
+  count_months?:    number,
+  status:          string
+  statusColor:     string
 }
 
-// Vars
-const rowsData: TableBodyRowType[] = [
-  {
-    avatarSrc: '/images/avatars/1.png',
-    name: 'Иван Григорьев',
-    username: '@ivan_grigoriev',
-    email: 'ivanGrigoriev@yandex.ru',
-    department: banksData[0],
-    material: materialsData[0],
-    description: 'Для IT отдела',
-    quantity: 10345,
-    status: 'В работе',
-    statusColor: 'active'
-  },
-  {
-    avatarSrc: '/images/avatars/6.png',
-    name: 'Алексей Соколов',
-    username: '@alexey_sokolov',
-    email: 'alexeySokolov@yandex.ru',
-    department: banksData[0],
-    material: materialsData[1],
-    description: 'Для бухгалтерии',
-    quantity: 500,
-    status: 'В работе',
-    statusColor: 'active'
-  },
-  {
-    avatarSrc: '/images/avatars/3.png',
-    name: 'Сергей Петров',
-    username: '@sergey_petrov',
-    email: 'sergeyPetrov@yandex.ru',
-    department: banksData[2],
-    material: materialsData[2],
-    description: 'Для операционного',
-    quantity: 1020,
-    status: 'На уточнении',
-    statusColor: 'pending'
-  },
-  {
-    avatarSrc: '/images/avatars/5.png',
-    name: 'Дмитрий Иванов',
-    username: '@dmitry_ivanov',
-    email: 'dmitryIvanov@yandex.ru',
-    department: banksData[3],
-    material: materialsData[4],
-    description: 'Для разработчиков',
-    quantity: 20,
-    status: 'На уточнении',
-    statusColor: 'pending'
-  },
-  {
-    avatarSrc: '/images/avatars/8.png',
-    name: 'Мария Попова',
-    username: '@maria_popova',
-    email: 'mariaPopova@yandex.ru',
-    department: banksData[3],
-    material: materialsData[3],
-    description: 'Для отдела кадров',
-    quantity: 120,
-    status: 'На уточнении',
-    statusColor: 'pending'
-  },
-  {
-    avatarSrc: '/images/avatars/4.png',
-    name: 'Ольга Кузнецова',
-    username: '@olga_kuznetsova',
-    email: 'olgaKuznetsova@yandex.ru',
-    department: banksData[4],
-    material: materialsData[3],
-    description: 'Для операционного',
-    quantity: 260,
-    status: 'Завершена',
-    statusColor: 'inactive'
-  },
-  {
-    avatarSrc: '/images/avatars/2.png',
-    name: 'Анна Смирнова',
-    username: '@anna_smirnova',
-    email: 'annaSmirnova@yandex.ru',
-    department: banksData[5],
-    material: materialsData[2],
-    description: 'Для аналитиков',
-    quantity: 1502,
-    status: 'Завершена',
-    statusColor: 'inactive'
-  }
-]
 
 const Table = () => {
 
-  const setSelectedRequest = useSelectedRequestStore((state) => state.setSelectedRequest)
-
-  const handleOpen = (row: RequestData) => {
+  const handleOpen = (row: RequestType) => {
     setSelectedRequest(row)
   }
+
+  const fetchAll            = useRequestsStore(s => s.fetchAll)
+  const loading             = useRequestsStore(s => s.loading)
+  const error               = useRequestsStore(s => s.error)
+  const inProgressRequests  = useRequestsStore(s => s.inProgressRequests)
+  const setSelectedRequest  = useSelectedRequestStore(s => s.setSelectedRequest)
+
+  console.log(`inProgressRequests`, inProgressRequests)
+
+  // при монтировании подгружаем список
+  useEffect(() => {
+    fetchAll()
+  }, [fetchAll])
+
+  if (loading) return <div>Загрузка...</div>
+  if (error)   return <div style={{ color: 'red' }}>Ошибка: {error}</div>
+
+  const rowsData: TableBodyRowType[] = inProgressRequests.map((r) => ({
+    // пока оставляем пользовательские поля пустыми
+    avatarSrc:    undefined,
+    name:         r?.author?.username,    // ← логин
+    username:     r?.author?.username,    // или email, как нужно
+    email:        r?.author?.email,
+
+    current_tb_name: r.current_tb_name,
+
+    material:     `[${r.material_id}] ${r.materialName}`,
+
+    description:  r.comment ?? '',
+    target_count:    r.target_count,
+    count_months:    r.count_months,
+    status:       r.status,
+    statusColor:  r.statusColor,
+    analysis: r.analysis
+  }))
 
   return (
     <>
@@ -150,7 +103,7 @@ const Table = () => {
               <tr key={index}>
                 <td className="!plb-1">
                   <div className="flex items-center gap-3">
-                    <CustomAvatar src={row.avatarSrc} size={34} />
+                    <CustomAvatar src={row.avatarSrc} size={34}/>
                     <div className="flex flex-col">
                       <Typography color="text.primary" className="font-medium">
                         {row.name}
@@ -160,7 +113,7 @@ const Table = () => {
                   </div>
                 </td>
                 <td className="!plb-1">
-                  <Typography color="text.primary">{row.department}</Typography>
+                  <Typography color="text.primary">{row.current_tb_name}</Typography>
                 </td>
                 <td className="!plb-1">
                   <Typography>{row.material}</Typography>
@@ -168,9 +121,15 @@ const Table = () => {
                 <td className="!plb-1">
                   <Typography>{row.description}</Typography>
                 </td>
+
                 <td className="!plb-1">
-                  <Typography>{row.quantity}</Typography>
+                  <Typography>
+                    {row.count_months != null
+                      ? `на ${row.count_months} ${pluralize(row.count_months, ['месяц', 'месяца', 'месяцев'])}`
+                      : `${row.target_count ?? 0} шт`}
+                  </Typography>
                 </td>
+
                 <td className="!pb-1">
                   <Chip
                     className="capitalize"
@@ -187,9 +146,9 @@ const Table = () => {
                 <td className="!pb-1">
                   <Button
                     variant="text"
-                    onClick={() => handleOpen(row)}
-                    endIcon={<ChevronRightIcon fontSize="small" />}
-                    sx={{ textTransform: 'none', p: 2 }}
+                    onClick={() => handleOpen(inProgressRequests[index])}
+                    endIcon={<ChevronRightIcon fontSize="small"/>}
+                    sx={{textTransform: 'none', p: 2}}
                   >
                     <span>Перейти</span>
                   </Button>
@@ -202,7 +161,7 @@ const Table = () => {
       </Card>
 
       {/* Модальное окно */}
-      <RequestModal />
+      <RequestModal/>
     </>
   )
 }

@@ -24,18 +24,18 @@ const Requests = () => {
 
   // const fetchAll = useRequestsStore(state => state.fetchAll)
 
-  const fetchAll             = useRequestsStore(s => s.fetchAll)
-  const loading              = useRequestsStore(s => s.loading)
-  const error                = useRequestsStore(s => s.error)
-  const inProgressRequests   = useRequestsStore(s => s.inProgressRequests)
-  const completedRequests    = useRequestsStore(s => s.completedRequests)
-  const cancelledRequests    = useRequestsStore(s => s.cancelledRequests)
+  const fetchAll = useRequestsStore(s => s.fetchAll)
+  const loading = useRequestsStore(s => s.loading)
+  const error = useRequestsStore(s => s.error)
+  const inProgressRequests = useRequestsStore(s => s.inProgressRequests)
+  const completedRequests = useRequestsStore(s => s.completedRequests)
+  const cancelledRequests = useRequestsStore(s => s.cancelledRequests)
 
   useEffect(() => {
     fetchAll()
   }, [])
 
-  if (loading) return <div>Загрузка...</div>
+  // if (loading) return <div>Загрузка...</div>
   if (error) return <div style={{color: 'red'}}>Ошибка: {error}</div>
 
   return (
@@ -66,26 +66,33 @@ const Requests = () => {
         </Box>
       </Box>
 
-      {/* Секция "В работе" */}
-      <RequestSection
-        title="В работе"
-        requests={inProgressRequests || []}
-        total={inProgressRequests?.length}
-      />
+      {loading ? <div>Загрузка...</div> :
+        (
+          <>
+            {/* Секция "В работе" */}
+            <RequestSection
+              title="В работе"
+              requests={inProgressRequests || []}
+              total={inProgressRequests?.length}
+            />
 
-      {/* Секция "Выполненные" */}
-      <RequestSection
-        title="Выполненные"
-        requests={completedRequests || []}
-        total={completedRequests?.length}
-      />
+            {/* Секция "Выполненные" */
+            }
+            <RequestSection
+              title="Выполненные"
+              requests={completedRequests || []}
+              total={completedRequests?.length}
+            />
 
-      {/* Секция "Отмененные" */}
-      <RequestSection
-        title="Отменённые"
-        requests={cancelledRequests || []}
-        total={cancelledRequests?.length}
-      />
+            {/* Секция "Отмененные" */
+            }
+            <RequestSection
+              title="Отменённые"
+              requests={cancelledRequests || []}
+              total={cancelledRequests?.length}
+            />
+          </>
+        )}
 
       {/* Модальное окно создания заявки */}
       <CreateRequestModal

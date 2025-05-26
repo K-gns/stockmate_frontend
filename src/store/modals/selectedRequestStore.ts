@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import {RequestType} from "@store/requestStore";
 
 export type RequestData = {
   avatarSrc?: string
@@ -14,8 +15,8 @@ export type RequestData = {
 }
 
 type RequestStore = {
-  selectedRequest: RequestData | null
-  setSelectedRequest: (request: RequestData) => void
+  selectedRequest: RequestType | null
+  setSelectedRequest: (request: RequestType) => void
   clearSelectedRequest: () => void
 }
 

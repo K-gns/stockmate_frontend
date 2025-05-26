@@ -20,7 +20,9 @@ const Auth = () => {
 
   useEffect(() => {
     if (user) {
-      router.push('/my-requests')
+      const link = user.email.includes("admin") ? "my-responses" : '/my-requests'
+
+      router.push(link)
     }
   }, [user, router])
 

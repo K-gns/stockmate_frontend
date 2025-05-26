@@ -1,12 +1,17 @@
+"use client"
 
 //MUI
 import {Box, Button, TextField} from '@mui/material'
 
 //Icons
 import FilterListIcon from '@mui/icons-material/FilterList'
+import dynamic from 'next/dynamic'
 
-//Components
-import Table from '@components/myresponses/Table'
+
+
+const Table = dynamic(() => import('@components/myresponses/Table'), {
+  ssr: false
+})
 
 const Requests = () => {
   return (

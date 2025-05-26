@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useMemo, useState } from 'react'
 
 import {
   Autocomplete,
@@ -28,11 +28,17 @@ import type { RequestType } from '@store/requestStore'
 import useRequestsStore from '@store/requestStore'
 import { banksData } from '@store/banksData'
 import { materialsData } from '@store/materialsData'
+import {materialsMap, warehousesMap} from "@store/materialsNames";
+import {toast} from "react-toastify";
 
 
 type FormData = Omit<RequestType, 'id' | 'date' | 'status'>;
 
 type OptionType = string | { inputValue: string; title: string };
+
+interface BankOption { id: string; label: string }
+
+interface MaterialOption { id: string; label: string }
 
 const filter = createFilterOptions<OptionType>();
 
@@ -46,21 +52,34 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
   const units = ['шт', 'кг', 'л', 'м']
   const monthOptions = Array.from({ length: 12 }, (_, i) => i + 1)
 
-  const addRequest = useRequestsStore((state) => state.addRequest)
+  const createRequest = useRequestsStore((state) => state.createRequest)
+  const isFetching = useRequestsStore((state) => state.loading)
 
   const [mode, setMode] = useState<'quantity' | 'months'>('quantity')
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   const [formData, setFormData] = useState<FormData>({
-    material: '',
+    material_id: '',
     materialName: '',
-    count: 0,
+    target_count: 0,
     unit: 'шт',
     current_tb: '',
+    current_tb_name: '',
     not_tb: [], //Банки из которых нельзя привозить
     comment: '',
     statusColor: 'inactive',
     count_months: undefined
   })
+
+  const bankOptions = useMemo<BankOption[]>(
+    () => Object.entries(warehousesMap).map(([id, label]) => ({ id, label })),
+    [] )
+
+  const materialOptions = useMemo<MaterialOption[]>(
+    () => Object.entries(materialsMap).map(([id, label]) => ({ id, label })),
+    []
+  )
 
   const handleModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selected = e.target.value as 'quantity' | 'months'
@@ -69,7 +88,7 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
 
     setFormData({
       ...formData,
-      count: selected === 'quantity' ? formData.count : 0,
+      target_count: selected === 'quantity' ? formData.target_count : 0,
       count_months: selected === 'months' ? formData.count_months : undefined,
       unit: selected === 'quantity' ? formData.unit : formData.unit
     })
@@ -89,16 +108,27 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
     })
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    setIsSubmitting(true)
     console.log('Отправка данных:', formData)
-    addRequest(formData)
-    onClose()
+    try {
+      await createRequest({
+        ...formData,
+        material_id: Number(formData.material_id),
+        not_tb: formData.not_tb as string[]
+      })
+      onClose()
+    } catch {
+
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={() => { if (!(isSubmitting || isFetching)) onClose() }}
       maxWidth="md"
       fullWidth
       PaperProps={{
@@ -151,63 +181,30 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
               Материал или ID материала
             </FormLabel>
             <Autocomplete
-              freeSolo
-              fullWidth
-              options={materialsData as OptionType[]}
-              filterOptions={(options, params) => {
-                const filtered = filter(options, params);
-                const { inputValue } = params;
-
-                // Если введённого значения нет в списке — добавляем «Добавить "xxx"»
-                const isExisting = options.includes(inputValue as OptionType);
-
-                if (inputValue !== '' && !isExisting) {
-                  filtered.push({
-                    inputValue,
-                    title: `Выбрать товар с ID "${inputValue}"`,
-                  });
-                }
-
-                return filtered;
-              }}
-              getOptionLabel={(option) => {
-                if (typeof option === 'string') {
-                  return option;
-                }
-
-                if ('inputValue' in option) {
-                  return option.inputValue;
-                }
-
-                return option;
-              }}
-              renderOption={(props, option) => (
-                <li {...props}>
-                  {typeof option === 'string' ? option : option.title}
-                </li>
-              )}
-              inputValue={formData.material}
-              onInputChange={(_, v) => {
-                setFormData({ ...formData, material: v });
-              }}
-              onChange={(_, newValue) => {
-                if (typeof newValue === 'string') {
-                  setFormData({ ...formData, material: newValue });
-                } else if (newValue && 'inputValue' in newValue) {
-                  setFormData({ ...formData, material: newValue.inputValue });
-                }
+              options={materialOptions}
+              getOptionLabel={(opt) => `[${opt.id}] ${opt.label}`}
+              value={
+                materialOptions.find((m) => m.id === formData.material_id) || null
+              }
+              onChange={(_, option) => {
+                setFormData((fd) => ({
+                  ...fd,
+                  material_id:     option ? option.id   : '',
+                  materialName: option ? option.label: ''
+                }))
               }}
               renderInput={(params) => (
                 <TextField
                   {...params}
                   variant="outlined"
-                  placeholder="Выберите материал или введите ID"
+                  placeholder="Выберите материал"
                   InputProps={{
                     ...params.InputProps,
                     sx: { borderRadius: 1, bgcolor: 'background.paper' }
                   }}
                 />
               )}
+              fullWidth
             />
           </Box>
 
@@ -221,8 +218,8 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
                 <Box sx={{ display: 'flex', gap: 2 }}>
                   <TextField
                     type="number"
-                    value={formData.count}
-                    onChange={handleChange('count')}
+                    value={formData.target_count}
+                    onChange={handleChange('target_count')}
                     variant="outlined"
                     placeholder="Количество"
                     InputProps={{
@@ -278,31 +275,32 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
 
         {/* Территориальный банк */}
         <Box sx={{ mb: 6 }}>
-          <FormLabel sx={{ mb: 2, display: 'block', color: 'text.primary' }}>Территориальный банк, в который требуется поставка</FormLabel>
+          <FormLabel sx={{ mb: 2, display: 'block', color: 'text.primary' }}>
+            Территориальный банк, в который требуется поставка
+          </FormLabel>
           <Autocomplete
-            freeSolo
+            options={bankOptions}
+            getOptionLabel={(opt) => `[${opt.id}] ${opt.label}`}
+            value={bankOptions.find((b) => b.id === formData.current_tb) || null}
+            onChange={(_, option) => {
+              setFormData((fd) => ({
+                ...fd,
+                current_tb: option ? option.id : '',
+                current_tb_name: option ? option.label : ''
+              }))
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                placeholder="Выберите банк"
+                InputProps={{
+                  ...params.InputProps,
+                  sx: { borderRadius: 1, bgcolor: 'background.paper' }
+                }}
+              />
+            )}
             fullWidth
-            options={banksData as OptionType[]}
-            filterOptions={(options, params) => {
-              const filtered = filter(options, params);
-              const { inputValue } = params;
-              const isExisting = options.includes(inputValue as OptionType);
-
-              if (inputValue !== '' && !isExisting) {
-                filtered.push({ inputValue, title: `Выбрать ТБ с ID "${inputValue}"` });
-              }
-
-              return filtered;
-            }}
-            getOptionLabel={(option) => typeof option === 'string' ? option : option.inputValue}
-            renderOption={(props, option) => <li {...props}>{typeof option === 'string' ? option : option.title}</li>}
-            inputValue={formData.current_tb}
-            onInputChange={(_, v) => setFormData({ ...formData, current_tb: v })}
-            onChange={(_, newVal) => {
-              if (typeof newVal === 'string') setFormData({ ...formData, current_tb: newVal });
-              else if (newVal && 'inputValue' in newVal) setFormData({ ...formData, current_tb: newVal.inputValue });
-            }}
-            renderInput={(params) => <TextField {...params} variant="outlined" placeholder="Выберите банк или введите ID" InputProps={{ ...params.InputProps, sx: { borderRadius: 1, bgcolor: 'background.paper' } }} />}
           />
         </Box>
 
@@ -322,18 +320,27 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
           </FormLabel>
           <Autocomplete
             multiple
-            freeSolo
-            options={banksData}
-            value={formData.not_tb || []}
-            onChange={handleNotTbChange}
+            options={bankOptions}
+            getOptionLabel={(opt) => `[${opt.id}] ${opt.label}`}
+            value={bankOptions.filter((b) => formData.not_tb?.includes(b.id))}
+            onChange={(_, options) => {
+              setFormData((fd) => ({
+                ...fd,
+                not_tb: options.map((o) => o.id)
+              }))
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
                 variant="outlined"
-                placeholder="Выберите банки или введите ID и нажмите Enter"
-                InputProps={{ ...params.InputProps, sx: { borderRadius: 1, bgcolor: 'background.paper' } }}
+                placeholder="Выберите банки для исключения"
+                InputProps={{
+                  ...params.InputProps,
+                  sx: { borderRadius: 1, bgcolor: 'background.paper' }
+                }}
               />
             )}
+            fullWidth
           />
         </Box>
 
@@ -365,14 +372,16 @@ const CreateRequestModal = ({ open, onClose }: CreateRequestModalProps) => {
           color="primary"
           onClick={handleSubmit}
           disabled={
-            !formData.material ||
+            (isSubmitting || isFetching) ||
+            !formData.material_id ||
+            !formData.current_tb ||
             (mode === 'quantity'
-              ? !(formData?.count && formData.count > 0) || !formData.unit
+              ? !(formData?.target_count && formData.target_count > 0) || !formData.unit
               : formData.count_months == null)
           }
           sx={{ mb: 2, borderRadius: 2 }}
         >
-          Создать заявку
+          {(isSubmitting || isFetching) ? 'Создание...' : 'Создать заявку'}
         </Button>
       </DialogActions>
     </Dialog>

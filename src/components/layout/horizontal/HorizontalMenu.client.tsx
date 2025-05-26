@@ -96,13 +96,13 @@ const HorizontalMenuClient = () => {
           Мои заявки
         </MenuItem>
 
-        {user === "admin@mail.ru" && (
+        {user?.includes("admin") && (
           <MenuItem href='/my-responses' icon={<i className='ri-team-line' />}>
             Мои ответы
           </MenuItem>
         )}
 
-        {user === 'admin@mail.ru' && (
+        {user?.includes("admin") && (
           <MenuItem href='/provisions' icon={<i className='ri-database-line' />}>
             Запасы
           </MenuItem>

@@ -109,7 +109,7 @@ const UserDropdown = () => {
                     <Avatar alt='John Doe' src='/images/avatars/1.png' />
                     <div className='flex items-start flex-col'>
                       <Typography className='font-medium' color='text.primary'>
-                        {user?.email === 'admin@mail.ru' ? 'Администратор' : 'Сотрудник'}
+                        {user?.email.includes("admin") ? 'Администратор' : 'Сотрудник'}
                       </Typography>
                       <Typography variant='caption'>{user?.email}</Typography>
                     </div>
